@@ -1,20 +1,16 @@
 package com.ruan.coinDesk.controller;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ruan.coinDesk.exception.CoinDeskApiException;
-import com.ruan.coinDesk.model.CoinDeskPOJO.CryptoCurrencyExchangeRate;
 import com.ruan.coinDesk.model.CoinDeskPOJO.CryptocurrencyExchangeRateRequest;
-import com.ruan.coinDesk.service.CoinDeskFlow;
-import com.ruan.coinDesk.service.process.CoinDeskService;
+import com.ruan.coinDesk.service.flow.CoinDeskFlow;
+import com.ruan.coinDesk.service.service.CoinDeskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 public class CoinDeskController {

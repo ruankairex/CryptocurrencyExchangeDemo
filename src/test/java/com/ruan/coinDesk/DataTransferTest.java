@@ -2,8 +2,7 @@ package com.ruan.coinDesk;
 
 
 import com.ruan.coinDesk.model.CoinDeskPOJO.CoindeskApiResponse;
-import com.ruan.coinDesk.service.api.CallApiService;
-import com.ruan.coinDesk.service.process.CoinDeskService;
+import com.ruan.coinDesk.service.service.CoinDeskService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

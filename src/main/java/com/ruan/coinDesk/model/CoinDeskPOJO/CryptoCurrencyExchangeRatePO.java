@@ -4,12 +4,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
+/**
+ * This object is used to interact with ORM framework
+ *
+ */
 @Entity
 @Table(name = "crypto_currency_exchange_rates")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CryptoCurrencyExchangeRate {
+public class CryptoCurrencyExchangeRatePO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

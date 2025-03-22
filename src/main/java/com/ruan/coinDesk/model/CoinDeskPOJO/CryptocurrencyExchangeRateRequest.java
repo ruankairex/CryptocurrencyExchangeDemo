@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
 
+/**
+ * This object is used to receive request body in coinDesk API
+ *
+ */
 public class CryptocurrencyExchangeRateRequest {
 
     private String chartName;

@@ -2,6 +2,10 @@ package com.ruan.coinDesk.model.CoinDeskPOJO;
 
 import java.util.List;
 
+/**
+ * This object is used for data conversion within the program
+ *
+ */
 public class CoinDeskDto {
 
     private String updatedTime;

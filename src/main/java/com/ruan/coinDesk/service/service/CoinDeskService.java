@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ruan.coinDesk.dao.CryptoCurrencyExchangeRateRepository;
 import com.ruan.coinDesk.model.CoinDeskPOJO.CoinDeskDto;
 import com.ruan.coinDesk.model.CoinDeskPOJO.CoindeskApiResponse;
-import com.ruan.coinDesk.model.CoinDeskPOJO.CryptoCurrencyExchangeRate;
+import com.ruan.coinDesk.model.CoinDeskPOJO.CryptoCurrencyExchangeRatePO;
 import com.ruan.coinDesk.model.CoinDeskPOJO.CryptocurrencyExchangeRateRequest;
 import com.ruan.coinDesk.service.check.CoinDeskServiceCheck;
 import com.ruan.coinDesk.util.CurrencyMap;
@@ -20,15 +20,30 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+
+/**
+ * This service implements all functionality required in CoinDeskFlow
+ */
 @Service
 public class CoinDeskService {
     private static final Logger log = LoggerFactory.getLogger(CoinDeskService.class);
-    @Autowired ObjectMapper objectMapper;
-    @Autowired CryptoCurrencyExchangeRateRepository cryptoCurrencyExchangeRateRepository;
-    @Autowired CoinDeskServiceCheck coinDeskServiceCheck;
+    @Autowired
+    ObjectMapper objectMapper;
+    @Autowired
+    CryptoCurrencyExchangeRateRepository cryptoCurrencyExchangeRateRepository;
+    @Autowired
+    CoinDeskServiceCheck coinDeskServiceCheck;
 
-    public CryptoCurrencyExchangeRate findUniqueByChartNameAndCurrencyCode(String chartName, String currencyCode) throws Exception {
-        List<CryptoCurrencyExchangeRate> byChartNameAndCurrencyCode = cryptoCurrencyExchangeRateRepository.findByChartNameAndCurrencyCode(chartName, currencyCode);
+    /**
+     * Check data is exist and only one
+     *
+     * @param chartName
+     * @param currencyCode
+     * @return
+     * @throws Exception
+     */
+    public CryptoCurrencyExchangeRatePO findUniqueByChartNameAndCurrencyCode(String chartName, String currencyCode) throws Exception {
+        List<CryptoCurrencyExchangeRatePO> byChartNameAndCurrencyCode = cryptoCurrencyExchangeRateRepository.findByChartNameAndCurrencyCode(chartName, currencyCode);
         if (byChartNameAndCurrencyCode != null && byChartNameAndCurrencyCode.size() == 1) {
             return byChartNameAndCurrencyCode.get(0);
         }
@@ -36,8 +51,14 @@ public class CoinDeskService {
         throw new Exception();
     }
 
-    public CoindeskApiResponse transResponseToDto(ResponseEntity<String> response)  {
-        try{
+    /**
+     * Transform response(ResponseEntity<String>) to dto(CoindeskApiResponse)
+     *
+     * @param response
+     * @return
+     */
+    public CoindeskApiResponse transResponseToDto(ResponseEntity<String> response) {
+        try {
             return objectMapper.readValue(response.getBody(), CoindeskApiResponse.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -57,7 +78,7 @@ public class CoinDeskService {
 
         String chineseName = CurrencyMap.getCurrencyName(cryptocurrency.getCurrencyCode());
 
-        CryptoCurrencyExchangeRate bitcoinExchangeRate = new CryptoCurrencyExchangeRate();
+        CryptoCurrencyExchangeRatePO bitcoinExchangeRate = new CryptoCurrencyExchangeRatePO();
         bitcoinExchangeRate.setChartName(cryptocurrency.getChartName());
         bitcoinExchangeRate.setCurrencyCode(cryptocurrency.getCurrencyCode());
         bitcoinExchangeRate.setCurrencyChineseName(chineseName);
@@ -76,14 +97,15 @@ public class CoinDeskService {
     }
 
     /**
-     * Check data is exist , if not or more than one then throw exception
+     * Check data is exist , if not or more than one then return false
      *
      * @param data
      * @return
      */
-
     public boolean checkDataIsExist(CryptocurrencyExchangeRateRequest data) {
-        List<CryptoCurrencyExchangeRate> byChartNameAndCurrencyCode = cryptoCurrencyExchangeRateRepository.findByChartNameAndCurrencyCode(data.getChartName(), data.getCurrencyCode());
+        List<CryptoCurrencyExchangeRatePO> byChartNameAndCurrencyCode =
+                cryptoCurrencyExchangeRateRepository
+                        .findByChartNameAndCurrencyCode(data.getChartName(), data.getCurrencyCode());
         return byChartNameAndCurrencyCode != null && byChartNameAndCurrencyCode.size() == 1;
     }
 
@@ -102,12 +124,12 @@ public class CoinDeskService {
             return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             log.error("convertToJson failed , message: {}", e.getMessage());
-            throw new RuntimeException("getting data failed");
+            throw new RuntimeException("format data failed");
         }
     }
 
     /**
-     * Get current date time
+     * Get current date time in yyyy-MM-dd HH:mm:ss
      *
      * @return
      */
@@ -118,7 +140,13 @@ public class CoinDeskService {
     }
 
 
-    public void updateData(CryptoCurrencyExchangeRate queryResult, CryptocurrencyExchangeRateRequest request) {
+    /**
+     * Dynamic update data if data is exist
+     *
+     * @param queryResult
+     * @param request
+     */
+    public void updateData(CryptoCurrencyExchangeRatePO queryResult, CryptocurrencyExchangeRateRequest request) {
 
         if (request.getCurrencyChineseName() != null) {
             queryResult.setCurrencyChineseName(request.getCurrencyChineseName());
@@ -140,15 +168,26 @@ public class CoinDeskService {
         cryptoCurrencyExchangeRateRepository.save(queryResult);
     }
 
+    /**
+     * Delete data by id
+     *
+     * @param currencyId
+     */
     public void deleteDataById(Long currencyId) {
         cryptoCurrencyExchangeRateRepository.deleteById(currencyId);
     }
 
+    /**
+     * Format data from CoindeskApiResponse to CoinDeskDto
+     *
+     * @param coinDeskResponse
+     * @return
+     */
     public CoinDeskDto formatData(CoindeskApiResponse coinDeskResponse) {
         CoinDeskDto coinDeskDto = new CoinDeskDto();
         String chartName = coinDeskResponse.getChartName();
         CoindeskApiResponse.TimeInfo rawTime = coinDeskResponse.getTime();
-        this.setTimeInfo(coinDeskDto , rawTime);
+        this.setTimeInfo(coinDeskDto, rawTime);
 
         List<CoinDeskDto.CurrencyRateInfo> currencyList = new ArrayList<>();
         if (coinDeskResponse.getBpi().isEmpty() || !CurrencyMap.containsCryptoCurrency(chartName)) {
@@ -172,6 +211,12 @@ public class CoinDeskService {
         return coinDeskDto;
     }
 
+    /**
+     * handle time info ,and format it in yyyy/MM/dd HH:mm:ss
+     *
+     * @param coinDeskDto
+     * @param rawTime
+     */
     private void setTimeInfo(CoinDeskDto coinDeskDto, CoindeskApiResponse.TimeInfo rawTime) {
         String updated = rawTime.getUpdated();
         String updatedISO = rawTime.getUpdatedISO();

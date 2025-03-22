@@ -1,0 +1,144 @@
+{
+	"info": {
+		"_postman_id": "82b00d42-38eb-4c6b-bf83-f39bdb8c1b35",
+		"name": "demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31713642"
+	},
+	"item": [
+		{
+			"name": "取得匯率資料表",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/coindesk",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"coindesk"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "新增資料",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"chartName\":\"Bitcoin\",\r\n  \"currencyCode\": \"USD\",\r\n  \"rate\": \"57,756.298\",\r\n  \"description\": \"United States Dollar\",\r\n  \"symbol\": \"$\",\r\n  \"rate_float\": 57756.2982\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/coindesk",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"coindesk"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "取得資料",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/coindesk/Bitcoin/USD",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"coindesk",
+						"Bitcoin",
+						"USD"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "更新資料",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"chartName\":\"Bitcoin\",\r\n  \"currencyCode\": \"USD\",\r\n  \"currencyChineseName\":\"測試123\",\r\n  \"rate\": \"57,756.298\",\r\n  \"description\": \"United States Dollar\",\r\n  \"symbol\": \"$\",\r\n  \"rate_float\": 57756.2982\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/coindesk",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"coindesk"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "刪除資料",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"chartName\":\"Bitcoin\",\r\n  \"currencyCode\": \"USD\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/coindesk",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"coindesk"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

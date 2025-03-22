@@ -1,24 +1,25 @@
 package com.ruan.coinDesk.service.check;
 
 
-import com.ruan.coinDesk.exception.CoinDeskApiException;
-import com.ruan.coinDesk.model.CoinDeskPOJO.CoindeskApiResponse;
 import com.ruan.coinDesk.model.CoinDeskPOJO.CryptocurrencyExchangeRateRequest;
-import com.ruan.coinDesk.util.CurrencyMap;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
+/**
+ * This class is used to check the information of CryptocurrencyExchangeRateRequest
+ */
 @Service
 public class CoinDeskServiceCheck {
 
+    /**
+     * This method is used to check the information is null or empty and data plausibility
+     *
+     * @param currencyVO
+     * @return
+     */
     public List<String> checkCoinDeskInfo(CryptocurrencyExchangeRateRequest currencyVO) {
         List<String> errorList = new ArrayList<>();
 
@@ -26,7 +27,7 @@ public class CoinDeskServiceCheck {
         if (currencyVO.getChartName() == null || currencyVO.getChartName().trim().isEmpty()) {
             errorList.add("ChartName cannot be null or empty");
         }
-        if(currencyVO.getRate() == null || currencyVO.getDescription().trim().isEmpty()) {
+        if (currencyVO.getRate() == null || currencyVO.getDescription().trim().isEmpty()) {
             errorList.add("Rate cannot be null");
         }
         if (currencyVO.getRateFloat() == null || currencyVO.getRateFloat().compareTo(BigDecimal.ZERO) <= 0) {
@@ -46,7 +47,7 @@ public class CoinDeskServiceCheck {
             return errorList;
         }
 
-        // 合理性檢查
+        //Data plausibility check
         String rateString = currencyVO.getRate().replace(",", "");
         BigDecimal rateFromString = new BigDecimal(rateString).setScale(3, BigDecimal.ROUND_HALF_UP);
         BigDecimal rateFromFloat = currencyVO.getRateFloat().setScale(3, BigDecimal.ROUND_HALF_UP);
@@ -54,9 +55,6 @@ public class CoinDeskServiceCheck {
         if (!rateFromString.equals(rateFromFloat)) {
             errorList.add("Rate is not equal to RateFloat");
         }
-
-
-
         return errorList;
     }
 

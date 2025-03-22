@@ -2,7 +2,7 @@ package com.ruan.coinDesk;
 
 
 import com.ruan.coinDesk.dao.CryptoCurrencyExchangeRateRepository;
-import com.ruan.coinDesk.model.CoinDeskPOJO.CryptoCurrencyExchangeRate;
+import com.ruan.coinDesk.model.CoinDeskPOJO.CryptoCurrencyExchangeRatePO;
 import com.ruan.coinDesk.service.service.CoinDeskService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-test.properties")
-public class CoinDeskCRUDApiTest {
+public class CallCoinDeskCRUDApiTest {
 
     @Autowired
     CryptoCurrencyExchangeRateRepository cryptoCurrencyExchangeRateRepository;
@@ -61,7 +61,7 @@ public class CoinDeskCRUDApiTest {
 
     @BeforeEach
     public void setup() throws Exception {
-        CryptoCurrencyExchangeRate request = new CryptoCurrencyExchangeRate();
+        CryptoCurrencyExchangeRatePO request = new CryptoCurrencyExchangeRatePO();
         request.setChartName("Bitcoin");
         request.setCurrencyCode("USD");
         request.setCurrencyChineseName("美元");
@@ -101,7 +101,7 @@ public class CoinDeskCRUDApiTest {
                         .content(updateData))  // 設定 request body
                 .andExpect(status().isOk())
                 .andDo(print());
-        CryptoCurrencyExchangeRate uniqueByChartNameAndCurrencyCode =
+        CryptoCurrencyExchangeRatePO uniqueByChartNameAndCurrencyCode =
                 coinDeskService.findUniqueByChartNameAndCurrencyCode("Bitcoin", "USD");
         assertEquals("測試123", uniqueByChartNameAndCurrencyCode.getCurrencyChineseName());
         assertEquals("66,666.298", uniqueByChartNameAndCurrencyCode.getRate());

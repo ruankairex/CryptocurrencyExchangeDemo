@@ -15,10 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 public class DataTransferTest {
-
     @Autowired
     private CoinDeskService coinDeskService;
-
     private ResponseEntity<String> apiResponse;
     private final String json = "{\n" +
             "\"time\": {\n" +

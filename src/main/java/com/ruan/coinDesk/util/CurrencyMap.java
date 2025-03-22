@@ -4,7 +4,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * This class defines currency and crypto currency map , can be used to get currency chinese name
+ * and can use this map to validate currency name is legal
+ */
 public class CurrencyMap {
     public static final Map<String, String> CURRENCY_MAP;
     public static final Map<String, String> CRYPTO_CURRENCY_MAP;

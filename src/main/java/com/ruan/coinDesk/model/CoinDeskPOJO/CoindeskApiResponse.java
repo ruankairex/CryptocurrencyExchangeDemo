@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Map;
 
+/**
+ * This object is used to receive responses from external APIs
+ *
+ */
 public class CoindeskApiResponse {
 
     private TimeInfo time;
@@ -77,17 +81,6 @@ public class CoindeskApiResponse {
         public void setRateFloat(double rateFloat) {
             this.rateFloat = rateFloat;
         }
-    }
-
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("CoindeskResponse{");
-        sb.append("time=").append(time);
-        sb.append(", disclaimer='").append(disclaimer).append('\'');
-        sb.append(", chartName='").append(chartName).append('\'');
-        sb.append(", bpi=").append(bpi);
-        sb.append('}');
-        return sb.toString();
     }
 }
 

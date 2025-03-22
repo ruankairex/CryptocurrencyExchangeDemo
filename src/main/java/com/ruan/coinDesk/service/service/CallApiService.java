@@ -9,6 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * This service is used to call external API and get raw response
+ *
+ */
 @Service
 public class CallApiService {
     private static final Logger log = LoggerFactory.getLogger(CoinDeskService.class);
@@ -19,7 +23,7 @@ public class CallApiService {
 
 
     /**
-     * Call CoinDeskAPI to get Response in String type
+     * Call CoinDeskAPI to get Response in ResponseEntity<String> type
      *
      * @return
      */

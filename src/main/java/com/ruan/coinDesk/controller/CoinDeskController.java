@@ -1,10 +1,8 @@
 package com.ruan.coinDesk.controller;
 
-
 import com.ruan.coinDesk.exception.CoinDeskApiException;
 import com.ruan.coinDesk.model.CoinDeskPOJO.CryptocurrencyExchangeRateRequest;
 import com.ruan.coinDesk.service.flow.CoinDeskFlow;
-import com.ruan.coinDesk.service.service.CoinDeskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +16,8 @@ public class CoinDeskController {
     @Autowired
     CoinDeskFlow coinDeskFlow;
 
-    @Autowired
-    CoinDeskService coinDeskService;
-
     /**
-     * Use this API to call the CoinDesk API(outer) and respond
+     * Use this API to call CoinDesk API(outer) and process the response
      *
      * @return
      */
@@ -34,8 +29,8 @@ public class CoinDeskController {
         } catch (CoinDeskApiException e) {
             log.error("logic error, message: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error calling CoinDesk API : " + e.getMessage());
-        }catch (Exception e) {
-            log.error("Unexpected error, message: {}", e.getMessage()  );
+        } catch (Exception e) {
+            log.error("Unexpected error, message: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unexpected error occurred.");
         }
     }
@@ -55,13 +50,20 @@ public class CoinDeskController {
         } catch (CoinDeskApiException e) {
             log.error("logic error, message: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error message : " + e.getMessage());
-        }catch (Exception e) {
-            log.error("Unexpected error, message: {}", e.getMessage()  );
+        } catch (Exception e) {
+            log.error("Unexpected error, message: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unexpected error occurred.");
         }
     }
 
-
+    /**
+     *  Use this API to insert data(CRYPTO_CURRENCY_EXCHANGE_RATES table)
+     *  if successful, return success
+     *  if failed, return error message
+     *
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/coindesk")
     public ResponseEntity<String> insertCoinDesk(@RequestBody CryptocurrencyExchangeRateRequest request) {
         try {
@@ -70,13 +72,20 @@ public class CoinDeskController {
         } catch (CoinDeskApiException e) {
             log.error("logic error, message: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error message : " + e.getMessage());
-        }catch (Exception e) {
-            log.error("Unexpected error, message: {}", e.getMessage()  );
+        } catch (Exception e) {
+            log.error("Unexpected error, message: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unexpected error occurred.");
         }
     }
 
-
+    /**
+     *  Use this API to update data(CRYPTO_CURRENCY_EXCHANGE_RATES table)
+     *  if successful, return success
+     *  if failed, return error message
+     *
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.PUT, value = "/coindesk")
     public ResponseEntity<String> updateCoinDesk(@RequestBody CryptocurrencyExchangeRateRequest request) {
         try {
@@ -85,13 +94,21 @@ public class CoinDeskController {
         } catch (CoinDeskApiException e) {
             log.error("logic error, message: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error message : " + e.getMessage());
-        }catch (Exception e) {
-            log.error("Unexpected error, message: {}", e.getMessage()  );
+        } catch (Exception e) {
+            log.error("Unexpected error, message: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unexpected error occurred.");
         }
     }
 
 
+    /**
+     *  Use this API to delete data(CRYPTO_CURRENCY_EXCHANGE_RATES table)
+     *  if successful, return success
+     *  if failed, return error message
+     *
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.DELETE, value = "/coindesk")
     public ResponseEntity<String> deleteCoinDesk(@RequestBody CryptocurrencyExchangeRateRequest request) {
         try {
@@ -100,8 +117,8 @@ public class CoinDeskController {
         } catch (CoinDeskApiException e) {
             log.error("logic error, message: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error message : " + e.getMessage());
-        }catch (Exception e) {
-            log.error("Unexpected error, message: {}", e.getMessage()  );
+        } catch (Exception e) {
+            log.error("Unexpected error, message: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unexpected error occurred.");
         }
     }

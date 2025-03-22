@@ -4,7 +4,7 @@ package com.ruan.coinDesk.service.flow;
 import com.ruan.coinDesk.exception.CoinDeskApiException;
 import com.ruan.coinDesk.model.CoinDeskPOJO.CoinDeskDto;
 import com.ruan.coinDesk.model.CoinDeskPOJO.CoindeskApiResponse;
-import com.ruan.coinDesk.model.CoinDeskPOJO.CryptoCurrencyExchangeRate;
+import com.ruan.coinDesk.model.CoinDeskPOJO.CryptoCurrencyExchangeRatePO;
 import com.ruan.coinDesk.model.CoinDeskPOJO.CryptocurrencyExchangeRateRequest;
 import com.ruan.coinDesk.service.service.CallApiService;
 import com.ruan.coinDesk.service.check.CoinDeskServiceCheck;
@@ -18,16 +18,23 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * This is the main process service of the Coindesk controller.
+ * This is the main service for CoinDeskController.
  */
 @Service
 public class CoinDeskFlow {
     @Autowired
     private CoinDeskService coinDeskService;
-    @Autowired private CallApiService callApiService;
-    @Autowired private CoinDeskServiceCheck coinDeskServiceCheck;
+    @Autowired
+    private CallApiService callApiService;
+    @Autowired
+    private CoinDeskServiceCheck coinDeskServiceCheck;
 
 
+    /**
+     * This is the function flow of CoinDeskController's getCoinDesk method( /getCoinDeskInfo ).
+     *
+     * @return
+     */
     public String callCoinDeskApi() {
         // call api
         ResponseEntity<String> apiResponse = callApiService.callCoinDeskAPI();
@@ -35,7 +42,7 @@ public class CoinDeskFlow {
         CoindeskApiResponse coinDeskResponse = coinDeskService.transResponseToDto(apiResponse);
         // process data
         CoinDeskDto coinDeskDto = coinDeskService.formatData(coinDeskResponse);
-        // 序列化
+        //Serialize
         String json = coinDeskService.convertToJson(coinDeskDto);
 
         return json;
@@ -57,7 +64,7 @@ public class CoinDeskFlow {
         }
         // check data is legal
         List<String> errorList = coinDeskServiceCheck.checkCoinDeskInfo(data);
-        if (!errorList.isEmpty()){
+        if (!errorList.isEmpty()) {
             throw new CoinDeskApiException(String.join(", ", errorList));
         }
         // process and insert data
@@ -79,7 +86,14 @@ public class CoinDeskFlow {
      * @throws Exception
      */
     public String findByChartNameAndCurrencyCode(String chartName, String currencyCode) throws Exception {
-        CryptoCurrencyExchangeRate queryResult = coinDeskService.findUniqueByChartNameAndCurrencyCode(chartName, currencyCode);
+        CryptoCurrencyExchangeRatePO queryResult;
+
+        try {
+            queryResult = coinDeskService.findUniqueByChartNameAndCurrencyCode(chartName, currencyCode);
+        } catch (Exception e) {
+            throw new CoinDeskApiException("Data not exist: " + chartName + "," + currencyCode);
+        }
+
         try {
             return coinDeskService.convertToJson(queryResult);
         } catch (Exception e) {
@@ -96,14 +110,14 @@ public class CoinDeskFlow {
     @Transactional
     public void updateData(CryptocurrencyExchangeRateRequest request) {
         // find data by chartName and currencyCode and check data is exist
-        CryptoCurrencyExchangeRate queryResult;
-        try{
+        CryptoCurrencyExchangeRatePO queryResult;
+        try {
             queryResult = coinDeskService.findUniqueByChartNameAndCurrencyCode(request.getChartName(), request.getCurrencyCode());
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new CoinDeskApiException("Data update failed , data not exist : " + request.getChartName() + "," + request.getCurrencyCode());
         }
         // update data
-        coinDeskService.updateData(queryResult , request);
+        coinDeskService.updateData(queryResult, request);
     }
 
 
@@ -114,11 +128,11 @@ public class CoinDeskFlow {
      */
     @Transactional
     public void deleteData(CryptocurrencyExchangeRateRequest request) {
-        // find data by chartName and currencyCode and check data is exist
-        CryptoCurrencyExchangeRate queryResult;
+        // find data by chartName and currencyCode and check data is existing
+        CryptoCurrencyExchangeRatePO queryResult;
         try {
             queryResult = coinDeskService.findUniqueByChartNameAndCurrencyCode(request.getChartName(), request.getCurrencyCode());
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new CoinDeskApiException("Data delete failed , data not exist : " + request.getChartName() + "," + request.getCurrencyCode());
         }
         // update data

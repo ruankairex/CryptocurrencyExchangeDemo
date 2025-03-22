@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CoinDeskDataTransferControllerTest {
+public class CallCoinDeskDataTransferTest {
 
     @Autowired
     private MockMvc mockMvc;
